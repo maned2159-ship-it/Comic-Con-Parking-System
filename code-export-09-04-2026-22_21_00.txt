@@ -1,0 +1,62 @@
+
+//Types of Vehicle
+vehicle_category [icon:truck,color:blue]{
+  vehicle_category_id serial pk
+  name varchar(50) not null uniqe
+}
+//VEHICLE
+vehicle[icon:car,color:blue]{
+  vehicle_id INT [pk]
+  license_plate VARCHAR [unique]
+  vehicle_category_id INT [ref: > vehicle_category.vehicle_category_id]
+}
+
+//PARKING ZONE
+zone[icon:map,color:purple]{
+  zone_id INT [pk]
+  name VARCHAR
+  description text
+}
+
+//PARKING LEVELS
+levels[icon:layers,color:purple]{
+  level_id serial pk
+  level_name varchar(20)
+}
+reserved_category {
+  reserved_category_id INT [pk]
+  name VARCHAR
+}
+
+//PARKING SPOT
+parking_spot[icon:square,color:red]{
+spot_id INT [pk]
+  zone_id INT [ref: > zone.zone_id]
+  level_id INT [ref: > level.level_id]
+  vehicle_category_id INT [ref: > vehicle_category.vehicle_category_id]
+  reserved_category_id INT [ref: > reserved_category.reserved_category_id, null]
+  is_available BOOLEAN
+}
+//PARKING SESSIONS
+parking_session[icon:clock,color:green]{
+  session_id INT [pk]
+  vehicle_id INT [ref: > vehicle.vehicle_id]
+  spot_id INT [ref: > parking_spot.spot_id]
+  entry_time DATETIME
+  exit_time DATETIME
+}
+//PARKING TICKETS
+tickets[icon:ticket,color:green]{
+  ticket_id INT [pk]
+  session_id INT [ref: > parking_session.session_id]
+  issued_time DATETIME
+}
+//PAYMENT
+
+Payment [icon:credit-card,color:teal]{
+  payment_id INT [pk]
+  ticket_id INT [ref: > ticket.ticket_id]
+  amount DECIMAL
+  status VARCHAR
+  payment_time DATETIME
+}
